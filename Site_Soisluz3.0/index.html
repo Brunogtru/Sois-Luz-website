@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <title>Sois Luz — Ministerio Feminino</title>
+  <meta name="description"
+    content="Sois Luz e um ministerio feminino que reune mulheres a mesa com proposito, presenca e fé. Encontros, produtos e comunidade.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Global particles canvas (fixed, fullscreen, desktop only) -->
+  <canvas id="global-particles" aria-hidden="true"></canvas>
+
+  <!-- Custom cursor (desktop only) -->
+  <div class="custom-cursor" aria-hidden="true"></div>
+  <div class="custom-cursor-glow" aria-hidden="true"></div>
+
+  <!-- ============================================
+       NAV — Floating glass pill, detached from top
+  ============================================= -->
+  <nav id="nav" class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Sois Luz</a>
+      <div class="nav__links">
+        <a href="#manifesto" class="nav__link">Sobre</a>
+        <a href="#proximo-evento" class="nav__link">Eventos</a>
+        <a href="#produtos" class="nav__link">Loja</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Abrir menu" aria-expanded="false" id="nav-toggle">
+        <span class="hamburger__linha"></span>
+        <span class="hamburger__linha"></span>
+        <span class="hamburger__linha"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="nav__mobile-overlay" id="mobile-overlay">
+    <div class="nav__mobile-menu">
+      <a href="#manifesto">Sobre</a>
+      <a href="#proximo-evento">Eventos</a>
+      <a href="#produtos">Loja</a>
+    </div>
+    <p class="nav__mobile-verse">"Vós sois a luz do mundo" — Mt 5:14</p>
+  </div>
+
+  <main class="main-wrapper">
+
+    <!-- ============================================
+         HERO SECTION
+    ============================================= -->
+    <section id="hero">
+      <div class="hero__bg">
+        <img src="assets/hero.jpg" alt="Mulheres reunidas a mesa na Sois Luz">
+      </div>
+
+      <div class="hero__overlay"></div>
+
+      <div class="hero__content">
+        <p class="hero__eyebrow">Ministerio Feminino</p>
+        <h1 class="hero__title">
+          <span class="hero__title-word">Sois</span>
+          <span class="hero__title-word">Luz</span>
+        </h1>
+        <p class="hero__verse">MT 5 : 14 — 16</p>
+        <a href="#manifesto" class="hero__cta">Quero fazer parte</a>
+      </div>
+
+      <div class="hero__scroll-hint">
+        <span></span>
+      </div>
+    </section>
+
+    <!-- ============================================
+         MANIFESTO SECTION
+    ============================================= -->
+    <section id="manifesto">
+      <div class="manifesto__container">
+
+        <div class="manifesto__line line--top"></div>
+
+        <div class="manifesto__blocks">
+
+          <div class="manifesto__block">
+            <span class="manifesto__number">01</span>
+            <!-- TODO: substituir pelo texto aprovado pela Thifani -->
+            <p class="manifesto__text">
+              Um encontro preparado para voce — a mesa, com proposito
+              e presenca.
+            </p>
+          </div>
+
+          <div class="manifesto__block">
+            <span class="manifesto__number">02</span>
+            <!-- TODO: substituir pelo texto aprovado pela Thifani -->
+            <p class="manifesto__text">
+              Para mulheres que buscam cura, identidade e pertencimento
+              em comunidade.
+            </p>
+          </div>
+
+          <div class="manifesto__block">
+            <span class="manifesto__number">03</span>
+            <!-- TODO: substituir pelo texto aprovado pela Thifani -->
+            <p class="manifesto__text">
+              Aqui a luz nao e um conceito — e o que voce carrega
+              e aprende a mostrar.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="manifesto__line line--bottom"></div>
+
+        <p class="manifesto__signature">Thifani Lemos — Pastora e fundadora</p>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         PROXIMO EVENTO SECTION
+    ============================================= -->
+    <section id="proximo-evento">
+
+      <!-- Particulas de fundo -->
+      <canvas id="evento-particles" aria-hidden="true"></canvas>
+
+      <div class="evento__container">
+
+        <!-- 1. Titulo superior -->
+        <div class="evento__header">
+          <span class="evento__eyebrow">Em breve</span>
+          <h2 class="evento__titulo">
+            Proximo Encontro
+            <em class="evento__titulo-destaque">Sois Luz</em>
+          </h2>
+        </div>
+
+        <!-- 2. Countdown -->
+        <div class="evento__countdown">
+          <div class="countdown__item">
+            <span class="countdown__numero" id="cd-dias">00</span>
+            <span class="countdown__label">Dias</span>
+          </div>
+          <span class="countdown__sep">&#10022;</span>
+          <div class="countdown__item">
+            <span class="countdown__numero" id="cd-horas">00</span>
+            <span class="countdown__label">Horas</span>
+          </div>
+          <span class="countdown__sep">&#10022;</span>
+          <div class="countdown__item">
+            <span class="countdown__numero" id="cd-minutos">00</span>
+            <span class="countdown__label">Minutos</span>
+          </div>
+          <span class="countdown__sep">&#10022;</span>
+          <div class="countdown__item">
+            <span class="countdown__numero" id="cd-segundos">00</span>
+            <span class="countdown__label">Segundos</span>
+          </div>
+        </div>
+
+        <!-- 3. Card central -->
+        <div class="evento__card">
+          <div class="evento__card-image">
+            <img src="assets/evento-capa.jpg" alt="Encontro Sois Luz">
+            <div class="evento__card-image-overlay"></div>
+          </div>
+          <div class="evento__card-body">
+            <span class="evento__card-tag">Encontro a Mesa</span>
+            <!-- TODO: substituir pelo texto aprovado pela Thifani -->
+            <h3 class="evento__card-nome">Mesa das Filhas do Rei</h3>
+            <div class="evento__card-infos">
+              <div class="evento__card-info">
+                <!-- Icone calendario -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+                <!-- TODO: substituir pela data real -->
+                <span>00 de Mes de 2025</span>
+              </div>
+              <div class="evento__card-info">
+                <!-- Icone relogio -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                <span>09h — 12h</span>
+              </div>
+              <div class="evento__card-info">
+                <!-- Icone pin -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <span>Suzano, SP</span>
+              </div>
+            </div>
+            <p class="evento__card-desc">
+              Um encontro preparado com intencao — para que voce
+              chegue uma mulher e parta outra.
+            </p>
+            <a href="eventos.html" class="evento__card-cta">
+              Quero reservar meu lugar
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Texto inspirador -->
+        <p class="evento__inspiracao">
+          Um momento preparado por Deus para fortalecer mulheres,
+          criar conexoes e iluminar vidas.
+        </p>
+
+        <!-- 5. Botao inferior -->
+        <a href="eventos.html" class="evento__btn">
+          <span>Ver Todos os Eventos</span>
+          <svg class="evento__btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         PRODUTOS SECTION
+    ============================================= -->
+    <section id="produtos">
+
+      <canvas id="produtos-particles" aria-hidden="true"></canvas>
+
+      <div class="produtos__container">
+
+        <!-- Header -->
+        <div class="produtos__header">
+          <span class="produtos__eyebrow">Feito para voce</span>
+          <h2 class="produtos__titulo">
+            O que a Sois Luz
+            <em class="produtos__titulo-destaque">preparou</em>
+          </h2>
+          <p class="produtos__subtitulo">
+            Cada produto criado com intencao — para te lembrar
+            de quem voce e.
+          </p>
+        </div>
+
+        <!-- Grid de produtos -->
+        <div class="produtos__grid">
+
+          <!-- Produto 1 — Kit Moleskine -->
+          <article class="produto__card" data-index="01">
+            <div class="produto__card-inner">
+
+              <div class="produto__imagem-wrap">
+                <img src="assets/produto-kit.jpg" alt="Kit Moleskine e Caneta — Sois Luz" class="produto__imagem">
+                <div class="produto__imagem-overlay"></div>
+                <!-- TODO: substituir pelo texto aprovado pela Thifani -->
+                <span class="produto__badge produto__badge--destaque">
+                  Mais pedido
+                </span>
+              </div>
+
+              <div class="produto__corpo">
+                <span class="produto__numero">01</span>
+                <h3 class="produto__nome">Kit Moleskine &amp; Caneta</h3>
+                <p class="produto__desc">
+                  Para registrar o que Deus fala — com elegancia
+                  e intencao em cada detalhe.
+                </p>
+                <div class="produto__rodape">
+                  <a href="loja.html" class="produto__cta">
+                    Conhecer
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+            <div class="produto__glow-line"></div>
+          </article>
+
+          <!-- Produto 2 — Necessaire -->
+          <article class="produto__card" data-index="02">
+            <div class="produto__card-inner">
+
+              <div class="produto__imagem-wrap">
+                <img src="assets/produto-necessaire.jpg" alt="Necessaire Sois Luz" class="produto__imagem">
+                <div class="produto__imagem-overlay"></div>
+                <span class="produto__badge">Exclusivo</span>
+              </div>
+
+              <div class="produto__corpo">
+                <span class="produto__numero">02</span>
+                <h3 class="produto__nome">Necessaire</h3>
+                <p class="produto__desc">
+                  Um presente para carregar consigo — a lembranca
+                  de que voce e luz onde quer que va.
+                </p>
+                <div class="produto__rodape">
+                  <a href="loja.html" class="produto__cta">
+                    Conhecer
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+            <div class="produto__glow-line"></div>
+          </article>
+
+        </div>
+
+        <!-- CTA final -->
+        <a href="loja.html" class="produtos__btn">
+          <span>Ver toda a loja</span>
+          <svg class="produtos__btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         DEPOIMENTOS SECTION
+    ============================================= -->
+    <section id="depoimentos">
+
+      <div class="depoimentos__container">
+
+        <!-- Header -->
+        <div class="depoimentos__header">
+          <span class="depoimentos__eyebrow">Quem ja viveu</span>
+          <h2 class="depoimentos__titulo">
+            O que elas
+            <em class="depoimentos__titulo-destaque">dizem</em>
+          </h2>
+        </div>
+
+        <!-- Carrossel -->
+        <div class="depoimentos__carrossel-wrap">
+
+          <div class="depoimentos__carrossel" id="depoimentos-track">
+
+            <!-- Depoimento 1 -->
+            <div class="depoimento__card">
+              <div class="depoimento__aspas">&#10022;</div>
+              <p class="depoimento__texto">
+                <!-- TODO: substituir pelo depoimento real -->
+                "Cheguei quebrada e sai inteira. A mesa da Sois Luz
+                foi o lugar onde Deus me encontrou de um jeito que
+                eu nunca tinha experimentado antes."
+              </p>
+              <div class="depoimento__autora">
+                <div class="depoimento__foto-wrap">
+                  <img src="assets/depoimento-1.jpg" alt="Foto da participante" class="depoimento__foto">
+                </div>
+                <div class="depoimento__info">
+                  <span class="depoimento__nome">
+                    <!-- TODO: nome real -->
+                    Ana Paula S.
+                  </span>
+                  <span class="depoimento__evento">
+                    Mesa das Filhas do Rei
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Depoimento 2 -->
+            <div class="depoimento__card">
+              <div class="depoimento__aspas">&#10022;</div>
+              <p class="depoimento__texto">
+                <!-- TODO: substituir pelo depoimento real -->
+                "Nunca me senti tao acolhida. Cada detalhe da mesa
+                foi pensado com amor — senti que Deus tinha preparado
+                aquele momento especialmente para mim."
+              </p>
+              <div class="depoimento__autora">
+                <div class="depoimento__foto-wrap">
+                  <img src="assets/depoimento-2.jpg" alt="Foto da participante" class="depoimento__foto">
+                </div>
+                <div class="depoimento__info">
+                  <span class="depoimento__nome">
+                    <!-- TODO: nome real -->
+                    Mariana C.
+                  </span>
+                  <span class="depoimento__evento">
+                    Mesa das Filhas do Rei
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Depoimento 3 -->
+            <div class="depoimento__card">
+              <div class="depoimento__aspas">&#10022;</div>
+              <p class="depoimento__texto">
+                <!-- TODO: substituir pelo depoimento real -->
+                "Sai dali sabendo quem eu sou. A Thifani tem um
+                dom raro — de fazer voce se sentir vista, amada
+                e escolhida por Deus."
+              </p>
+              <div class="depoimento__autora">
+                <div class="depoimento__foto-wrap">
+                  <img src="assets/depoimento-3.jpg" alt="Foto da participante" class="depoimento__foto">
+                </div>
+                <div class="depoimento__info">
+                  <span class="depoimento__nome">
+                    <!-- TODO: nome real -->
+                    Juliana R.
+                  </span>
+                  <span class="depoimento__evento">
+                    Mesa das Filhas do Rei
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Controles -->
+          <button class="depoimentos__btn-nav btn-prev" aria-label="Anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M11 6l-6 6 6 6" />
+            </svg>
+          </button>
+
+          <button class="depoimentos__btn-nav btn-next" aria-label="Proximo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+
+        </div>
+
+        <!-- Indicadores -->
+        <div class="depoimentos__dots">
+          <button class="depoimentos__dot active" data-index="0" aria-label="Depoimento 1"></button>
+          <button class="depoimentos__dot" data-index="1" aria-label="Depoimento 2"></button>
+          <button class="depoimentos__dot" data-index="2" aria-label="Depoimento 3"></button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         SOBRE / FUNDADORA SECTION
+    ============================================= -->
+    <section id="sobre">
+
+      <div class="sobre__container">
+
+        <!-- Coluna da imagem -->
+        <div class="sobre__imagem-col">
+          <div class="sobre__imagem-wrap">
+            <img src="assets/thifani.png" alt="Thifani Lemos — Pastora e fundadora da Sois Luz" class="sobre__imagem">
+            <!-- Moldura decorativa dourada -->
+            <div class="sobre__imagem-frame"></div>
+          </div>
+          <!-- Selo flutuante -->
+          <div class="sobre__selo">
+            <span class="sobre__selo-texto">Sois Luz</span>
+            <!-- TODO: substituir pelo ano real de fundacao -->
+            <span class="sobre__selo-sub">desde 20__</span>
+          </div>
+        </div>
+
+        <!-- Coluna do texto -->
+        <div class="sobre__texto-col">
+
+          <div class="sobre__header">
+            <span class="sobre__eyebrow">A fundadora</span>
+            <h2 class="sobre__titulo">
+              Thifani
+              <em class="sobre__titulo-destaque">Lemos</em>
+            </h2>
+          </div>
+
+          <div class="sobre__linha-dourada"></div>
+
+          <p class="sobre__bio">
+            <!-- TODO: substituir pela bio real da Thifani -->
+            Pastora, esposa e mae — Thifani Lemos fundou a Sois Luz
+            com uma conviccao: toda mulher carrega uma luz que precisa
+            ser restaurada, nao acesa do zero.
+          </p>
+
+          <p class="sobre__bio">
+            <!-- TODO: substituir pela bio real da Thifani -->
+            Nascida em Suzano, construiu o ministerio a mesa —
+            literalmente. Em cada encontro, ela cria um espaco seguro
+            onde mulheres se encontram com Deus e consigo mesmas.
+          </p>
+
+          <blockquote class="sobre__frase">
+            <!-- TODO: frase real da Thifani -->
+            "Voce nao precisa ser consertada. Voce precisa ser
+            lembrada de quem voce sempre foi."
+            <cite>— Thifani Lemos</cite>
+          </blockquote>
+
+          <a href="https://instagram.com/soisluz" target="_blank" rel="noopener noreferrer" class="sobre__instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+            </svg>
+            <span>@soisluz</span>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+    ============================================= -->
+    <footer id="footer">
+
+      <div class="footer__topo">
+        <div class="footer__container">
+
+          <!-- Logo e descricao -->
+          <div class="footer__marca">
+            <span class="footer__logo">Sois Luz</span>
+            <p class="footer__tagline">Ministerio Feminino Cristao</p>
+            <p class="footer__localizacao">Suzano, Sao Paulo — Brasil</p>
+          </div>
+
+          <!-- Navegacao -->
+          <nav class="footer__nav" aria-label="Navegacao do rodape">
+            <span class="footer__nav-titulo">Navegar</span>
+            <ul class="footer__nav-lista">
+              <li><a href="#manifesto">Sobre</a></li>
+              <li><a href="#proximo-evento">Eventos</a></li>
+              <li><a href="#produtos">Produtos</a></li>
+              <li><a href="#depoimentos">Depoimentos</a></li>
+              <li><a href="eventos.html">Todos os Eventos</a></li>
+              <li><a href="loja.html">Loja</a></li>
+            </ul>
+          </nav>
+
+          <!-- Contato -->
+          <div class="footer__contato">
+            <span class="footer__nav-titulo">Contato</span>
+            <ul class="footer__nav-lista">
+              <li>
+                <a href="https://instagram.com/soisluz" target="_blank" rel="noopener noreferrer">
+                  Instagram @soisluz
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener noreferrer">
+                  <!-- TODO: numero real do WhatsApp -->
+                  WhatsApp
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Linha divisoria -->
+      <div class="footer__divisor"></div>
+
+      <!-- Base do footer -->
+      <div class="footer__base">
+        <div class="footer__container">
+          <p class="footer__copy">&copy; 2025 Sois Luz — Todos os direitos reservados</p>
+          <p class="footer__verso">"Vos sois a luz do mundo." — Mt 5:14</p>
+        </div>
+      </div>
+
+    </footer>
+
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
