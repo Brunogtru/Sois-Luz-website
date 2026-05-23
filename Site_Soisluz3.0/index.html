@@ -363,105 +363,115 @@
         <!-- Carrossel -->
         <div class="depoimentos__carrossel-wrap">
 
-          <div class="depoimentos__carrossel" id="depoimentos-track">
+          <!-- Track com overflow hidden -->
+          <div class="depoimentos__track-outer">
+            <div class="depoimentos__carrossel" id="depoimentos-track">
 
-            <!-- Depoimento 1 -->
-            <div class="depoimento__card">
-              <div class="depoimento__aspas">&#10022;</div>
-              <p class="depoimento__texto">
-                <!-- TODO: substituir pelo depoimento real -->
-                "Cheguei quebrada e sai inteira. A mesa da Sois Luz
-                foi o lugar onde Deus me encontrou de um jeito que
-                eu nunca tinha experimentado antes."
-              </p>
-              <div class="depoimento__autora">
-                <div class="depoimento__foto-wrap">
-                  <img src="assets/depoimento-1.jpg" alt="Foto da participante" class="depoimento__foto">
-                </div>
-                <div class="depoimento__info">
-                  <span class="depoimento__nome">
-                    <!-- TODO: nome real -->
-                    Ana Paula S.
-                  </span>
-                  <span class="depoimento__evento">
-                    Mesa das Filhas do Rei
-                  </span>
+              <!-- Depoimento 1 -->
+              <div class="depoimento__card">
+                <div class="depoimento__aspas">&#10022;</div>
+                <p class="depoimento__texto">
+                  <!-- TODO: substituir pelo depoimento real -->
+                  "Cheguei quebrada e sai inteira. A mesa da Sois Luz
+                  foi o lugar onde Deus me encontrou de um jeito que
+                  eu nunca tinha experimentado antes."
+                </p>
+                <div class="depoimento__autora">
+                  <div class="depoimento__foto-wrap">
+                    <img src="assets/depoimento-1.jpg" alt="Foto da participante" class="depoimento__foto">
+                  </div>
+                  <div class="depoimento__info">
+                    <span class="depoimento__nome">
+                      <!-- TODO: nome real -->
+                      Ana Paula S.
+                    </span>
+                    <span class="depoimento__evento">
+                      Mesa das Filhas do Rei
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Depoimento 2 -->
-            <div class="depoimento__card">
-              <div class="depoimento__aspas">&#10022;</div>
-              <p class="depoimento__texto">
-                <!-- TODO: substituir pelo depoimento real -->
-                "Nunca me senti tao acolhida. Cada detalhe da mesa
-                foi pensado com amor — senti que Deus tinha preparado
-                aquele momento especialmente para mim."
-              </p>
-              <div class="depoimento__autora">
-                <div class="depoimento__foto-wrap">
-                  <img src="assets/depoimento-2.jpg" alt="Foto da participante" class="depoimento__foto">
-                </div>
-                <div class="depoimento__info">
-                  <span class="depoimento__nome">
-                    <!-- TODO: nome real -->
-                    Mariana C.
-                  </span>
-                  <span class="depoimento__evento">
-                    Mesa das Filhas do Rei
-                  </span>
+              <!-- Depoimento 2 -->
+              <div class="depoimento__card">
+                <div class="depoimento__aspas">&#10022;</div>
+                <p class="depoimento__texto">
+                  <!-- TODO: substituir pelo depoimento real -->
+                  "Nunca me senti tao acolhida. Cada detalhe da mesa
+                  foi pensado com amor — senti que Deus tinha preparado
+                  aquele momento especialmente para mim."
+                </p>
+                <div class="depoimento__autora">
+                  <div class="depoimento__foto-wrap">
+                    <img src="assets/depoimento-2.jpg" alt="Foto da participante" class="depoimento__foto">
+                  </div>
+                  <div class="depoimento__info">
+                    <span class="depoimento__nome">
+                      <!-- TODO: nome real -->
+                      Mariana C.
+                    </span>
+                    <span class="depoimento__evento">
+                      Mesa das Filhas do Rei
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Depoimento 3 -->
-            <div class="depoimento__card">
-              <div class="depoimento__aspas">&#10022;</div>
-              <p class="depoimento__texto">
-                <!-- TODO: substituir pelo depoimento real -->
-                "Sai dali sabendo quem eu sou. A Thifani tem um
-                dom raro — de fazer voce se sentir vista, amada
-                e escolhida por Deus."
-              </p>
-              <div class="depoimento__autora">
-                <div class="depoimento__foto-wrap">
-                  <img src="assets/depoimento-3.jpg" alt="Foto da participante" class="depoimento__foto">
-                </div>
-                <div class="depoimento__info">
-                  <span class="depoimento__nome">
-                    <!-- TODO: nome real -->
-                    Juliana R.
-                  </span>
-                  <span class="depoimento__evento">
-                    Mesa das Filhas do Rei
-                  </span>
+              <!-- Depoimento 3 -->
+              <div class="depoimento__card">
+                <div class="depoimento__aspas">&#10022;</div>
+                <p class="depoimento__texto">
+                  <!-- TODO: substituir pelo depoimento real -->
+                  "Sai dali sabendo quem eu sou. A Thifani tem um
+                  dom raro — de fazer voce se sentir vista, amada
+                  e escolhida por Deus."
+                </p>
+                <div class="depoimento__autora">
+                  <div class="depoimento__foto-wrap">
+                    <img src="assets/depoimento-3.jpg" alt="Foto da participante" class="depoimento__foto">
+                  </div>
+                  <div class="depoimento__info">
+                    <span class="depoimento__nome">
+                      <!-- TODO: nome real -->
+                      Juliana R.
+                    </span>
+                    <span class="depoimento__evento">
+                      Mesa das Filhas do Rei
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
 
-          <!-- Controles -->
-          <button class="depoimentos__btn-nav btn-prev" aria-label="Anterior">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M19 12H5M11 6l-6 6 6 6" />
+          <!-- Setas fora do track-outer para ficarem sobre ele -->
+          <button class="depoimentos__btn-nav btn-prev"
+                  id="dep-prev" aria-label="Anterior">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M11 6l-6 6 6 6"/>
             </svg>
           </button>
 
-          <button class="depoimentos__btn-nav btn-next" aria-label="Proximo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M5 12h14M13 6l6 6-6 6" />
+          <button class="depoimentos__btn-nav btn-next"
+                  id="dep-next" aria-label="Próximo">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
             </svg>
           </button>
 
         </div>
 
-        <!-- Indicadores -->
-        <div class="depoimentos__dots">
-          <button class="depoimentos__dot active" data-index="0" aria-label="Depoimento 1"></button>
-          <button class="depoimentos__dot" data-index="1" aria-label="Depoimento 2"></button>
-          <button class="depoimentos__dot" data-index="2" aria-label="Depoimento 3"></button>
+        <!-- Dots -->
+        <div class="depoimentos__dots" id="dep-dots">
+          <!-- gerados via JS -->
+        </div>
+
+        <!-- Barra de progresso do autoplay -->
+        <div class="depoimentos__progress">
+          <div class="depoimentos__progress-bar" id="dep-progress"></div>
         </div>
 
       </div>

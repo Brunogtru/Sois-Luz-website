@@ -14,6 +14,7 @@
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.normalizeScroll(false);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 /* ---------- NAV STATE ---------- */
 function initNavState() {
@@ -239,57 +240,149 @@ function initProdutos() {
 
 /* ---------- DEPOIMENTOS ---------- */
 function initDepoimentos() {
-  var track = document.getElementById('depoimentos-track');
-  var cards = document.querySelectorAll('.depoimento__card');
-  var dots = document.querySelectorAll('.depoimentos__dot');
-  var btnPrev = document.querySelector('.btn-prev');
-  var btnNext = document.querySelector('.btn-next');
 
-  if (!track || !btnPrev || !btnNext) return;
+  var track      = document.getElementById('depoimentos-track');
+  var dotsWrap   = document.getElementById('dep-dots');
+  var btnPrev    = document.getElementById('dep-prev');
+  var btnNext    = document.getElementById('dep-next');
+  var progressBar = document.getElementById('dep-progress');
 
-  var current = 0;
-  var total = cards.length;
+  if (!track) return;
 
-  function goTo(index) {
-    current = ((index % total) + total) % total;
-    track.style.transform = 'translateX(-' + (current * 100) + '%)';
-    dots.forEach(function (dot, i) {
-      dot.classList.toggle('active', i === current);
+  var cards  = track.querySelectorAll('.depoimento__card');
+  var total  = cards.length;
+  var current  = 0;
+  var autoplayTimer  = null;
+  var progressTimer  = null;
+  var AUTOPLAY_MS  = 5000;
+
+  /* Gera os dots dinamicamente */
+  dotsWrap.innerHTML = '';
+  cards.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.className = 'depoimentos__dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Depoimento ' + (i + 1));
+    dot.addEventListener('click', function() {
+      goTo(i, true);
     });
-  }
-
-  btnNext.addEventListener('click', function () { goTo(current + 1); });
-  btnPrev.addEventListener('click', function () { goTo(current - 1); });
-
-  dots.forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      goTo(Number(dot.dataset.index));
-    });
+    dotsWrap.appendChild(dot);
   });
 
-  /* Swipe em mobile */
-  var startX = 0;
+  /* Navega para o indice alvo */
+  function goTo(index, resetAutoplay) {
+    current = ((index % total) + total) % total;
 
-  track.addEventListener('touchstart', function (e) {
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+
+    dotsWrap.querySelectorAll('.depoimentos__dot')
+      .forEach(function(dot, i) {
+        dot.classList.toggle('active', i === current);
+      });
+
+    gsap.fromTo(cards[current],
+      { opacity: 0.6, scale: 0.98 },
+      { opacity: 1, scale: 1,
+        duration: 0.5, ease: 'power2.out' }
+    );
+
+    if (resetAutoplay) {
+      reiniciarAutoplay();
+    }
+  }
+
+  /* Barra de progresso */
+  function iniciarProgress() {
+    progressBar.style.transition = 'none';
+    progressBar.style.width = '0%';
+
+    /* Forca reflow para reiniciar a animacao CSS */
+    progressBar.offsetHeight;
+
+    progressBar.style.transition = 'width ' + AUTOPLAY_MS + 'ms linear';
+    progressBar.style.width = '100%';
+  }
+
+  /* Autoplay */
+  function iniciarAutoplay() {
+    autoplayTimer = setInterval(function() {
+      goTo(current + 1);
+      iniciarProgress();
+    }, AUTOPLAY_MS);
+    iniciarProgress();
+  }
+
+  function pararAutoplay() {
+    clearInterval(autoplayTimer);
+    clearTimeout(progressTimer);
+    progressBar.style.transition = 'none';
+    progressBar.style.width = '0%';
+  }
+
+  function reiniciarAutoplay() {
+    pararAutoplay();
+    iniciarAutoplay();
+  }
+
+  /* Setas */
+  btnPrev.addEventListener('click', function() {
+    goTo(current - 1, true);
+  });
+
+  btnNext.addEventListener('click', function() {
+    goTo(current + 1, true);
+  });
+
+  /* Pausa ao hover */
+  var wrap = document.querySelector('.depoimentos__carrossel-wrap');
+  wrap.addEventListener('mouseenter', pararAutoplay);
+  wrap.addEventListener('mouseleave', function() {
+    iniciarAutoplay();
+  });
+
+  /* Swipe mobile */
+  var startX = 0;
+  track.addEventListener('touchstart', function(e) {
     startX = e.touches[0].clientX;
+    pararAutoplay();
   }, { passive: true });
 
-  track.addEventListener('touchend', function (e) {
+  track.addEventListener('touchend', function(e) {
     var diff = startX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      diff > 0 ? goTo(current + 1) : goTo(current - 1);
+      diff > 0 ? goTo(current + 1, true) : goTo(current - 1, true);
+    } else {
+      iniciarAutoplay();
     }
   }, { passive: true });
 
-  /* Entrada GSAP */
-  gsap.to('.depoimentos__header', {
-    opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-    scrollTrigger: { trigger: '#depoimentos', start: 'top 75%' }
+  /* Teclado acessivel */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft')  goTo(current - 1, true);
+    if (e.key === 'ArrowRight') goTo(current + 1, true);
   });
 
-  gsap.from('.depoimentos__carrossel-wrap', {
-    opacity: 0, y: 40, duration: 1, ease: 'power3.out',
-    scrollTrigger: { trigger: '.depoimentos__carrossel-wrap', start: 'top 80%' }
+  /* Animacao GSAP de entrada */
+  gsap.to('.depoimentos__header', {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '#depoimentos',
+      start: 'top 75%'
+    }
+  });
+
+  gsap.from('.depoimentos__track-outer', {
+    opacity: 0,
+    y: 40,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.depoimentos__carrossel-wrap',
+      start: 'top 80%',
+      onEnter: function() { iniciarAutoplay(); }
+    }
   });
 }
 
@@ -323,6 +416,7 @@ function initFooter() {
 function initGlobalParticles() {
   var canvas = document.getElementById('global-particles');
   if (!canvas) return;
+  canvas.style.pointerEvents = 'none';
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return;
@@ -446,10 +540,10 @@ function initCustomCursor() {
   });
 
   function updateCursor() {
-    dotX += (mouseX - dotX) * 0.18;
-    dotY += (mouseY - dotY) * 0.18;
-    glowX += (mouseX - glowX) * 0.09;
-    glowY += (mouseY - glowY) * 0.09;
+    dotX += (mouseX - dotX) * 0.45;
+    dotY += (mouseY - dotY) * 0.45;
+    glowX += (mouseX - glowX) * 0.24;
+    glowY += (mouseY - glowY) * 0.24;
 
     dot.style.left = dotX + 'px';
     dot.style.top = dotY + 'px';
