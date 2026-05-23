@@ -160,9 +160,55 @@
     }
   </style>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/script.js"></script>
 
+  <script>
+  async function atualizarPedido() {
+    const params = new URLSearchParams(window.location.search)
+
+    const status          = params.get('status')
+    const collectionStatus = params.get('collection_status')
+    const paymentId       = params.get('payment_id')
+    const externalRef     = params.get('external_reference')
+
+    // Só atualiza se veio do Mercado Pago com referência
+    if (!externalRef || !paymentId) return
+
+    const statusMap = {
+      'approved': 'aprovado',
+      'pending':  'pendente',
+      'rejected': 'recusado',
+      'null':     'pendente'
+    }
+
+    const novoStatus = statusMap[status] ||
+                       statusMap[collectionStatus] ||
+                       'pendente'
+
+    try {
+      const { error } = await db
+        .from('pedidos')
+        .update({
+          status:        novoStatus,
+          mp_payment_id: paymentId
+        })
+        .eq('id', externalRef)
+
+      if (error) {
+        console.error('Erro ao atualizar pedido:', error)
+      } else {
+        console.log('Pedido atualizado:', novoStatus)
+      }
+    } catch (err) {
+      console.error('Erro:', err)
+    }
+  }
+
+  // Executa assim que a página carrega
+  atualizarPedido()
+  </script>
 </body>
 
 </html>
