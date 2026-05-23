@@ -586,6 +586,35 @@ function initFormCheckout() {
   var form = document.getElementById('form-checkout');
   if (!form) return;
 
+  const cepEl = document.getElementById('checkout-cep');
+  if (cepEl) {
+    // Busca automática de CEP
+    cepEl.addEventListener('blur', async function() {
+      const cep = this.value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          document.getElementById('checkout-rua').value = data.logradouro || '';
+          document.getElementById('checkout-cidade').value = data.localidade || '';
+          document.getElementById('checkout-estado').value = data.uf || '';
+        }
+      } catch (err) {
+        console.error('Erro ao buscar CEP:', err);
+      }
+    });
+
+    // Máscara do CEP
+    cepEl.addEventListener('input', function() {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5,8);
+      this.value = v;
+    });
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -595,14 +624,19 @@ function initFormCheckout() {
     btnTexto.classList.add('hidden');
     btnLoading.classList.remove('hidden');
 
-    const nome     = document.getElementById('checkout-nome').value.trim();
-    const email    = document.getElementById('checkout-email').value.trim();
-    const telefone = document.getElementById('checkout-tel').value.trim();
-    const endereco = document.getElementById('checkout-endereco').value.trim();
+    const nome        = document.getElementById('checkout-nome').value.trim();
+    const email       = document.getElementById('checkout-email').value.trim();
+    const telefone    = document.getElementById('checkout-tel').value.trim();
+    const cep         = document.getElementById('checkout-cep').value.trim();
+    const rua         = document.getElementById('checkout-rua').value.trim();
+    const numero      = document.getElementById('checkout-numero').value.trim();
+    const complemento = document.getElementById('checkout-complemento').value.trim();
+    const cidade      = document.getElementById('checkout-cidade').value.trim();
+    const estado      = document.getElementById('checkout-estado').value.trim();
 
     // Validação básica
-    if (!nome || !email || !telefone || !endereco) {
-      alert('Por favor, preencha todos os campos.');
+    if (!nome || !email || !telefone || !cep || !rua || !numero || !cidade || !estado) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
       btnTexto.classList.remove('hidden');
       btnLoading.classList.add('hidden');
       return;
@@ -649,7 +683,14 @@ function initFooter() {
 
 /* ---------- FINALIZAR COMPRA (MERCADO PAGO VIA SUPABASE EDGE FUNCTION) ---------- */
 async function finalizarCompra(nome, email, telefone) {
-  const endereco = document.getElementById('checkout-endereco').value.trim();
+  const cep          = document.getElementById('checkout-cep').value.trim();
+  const rua          = document.getElementById('checkout-rua').value.trim();
+  const numero       = document.getElementById('checkout-numero').value.trim();
+  const complemento  = document.getElementById('checkout-complemento').value.trim();
+  const cidade       = document.getElementById('checkout-cidade').value.trim();
+  const estado       = document.getElementById('checkout-estado').value.trim();
+
+  const endereco = `${rua}, ${numero}${complemento ? ', ' + complemento : ''} — ${cidade}/${estado} — CEP ${cep}`;
   
   const pedidoRef = crypto.randomUUID();
 
