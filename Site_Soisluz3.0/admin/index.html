@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <title>Login Administrativo — Sois Luz</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="admin-login-page">
+
+  <div class="admin-login-card">
+    <a href="#" class="admin-login-logo">Sois Luz</a>
+    <span class="admin-login-sub">Área Administrativa</span>
+
+    <form class="admin-login-form" id="form-login" novalidate>
+      <div class="admin-form__grupo">
+        <label class="admin-form__label" for="login-email">E-mail</label>
+        <input class="admin-form__input" type="email" id="login-email" placeholder="admin@soisluz.com" required
+          autocomplete="email">
+      </div>
+
+      <div class="admin-form__grupo">
+        <label class="admin-form__label" for="login-senha">Senha</label>
+        <div class="admin-senha-wrap">
+          <input class="admin-form__input" type="password" id="login-senha" placeholder="••••••••" required
+            autocomplete="current-password">
+          <button type="button" class="admin-senha-toggle" id="toggle-password" aria-label="Mostrar senha">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primario" type="submit" id="btn-login" style="width: 100%; justify-content: center;">
+        Entrar
+      </button>
+
+      <!-- Erro inline -->
+      <p class="admin-login-erro hidden" id="login-erro" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="js/admin-auth.js"></script>
+
+  <script>
+    // Mostrar/Ocultar Senha
+    document.getElementById('toggle-password').addEventListener('click', function () {
+      const senhaInput = document.getElementById('login-senha');
+      const iconSvg = this.querySelector('svg');
+      if (senhaInput.type === 'password') {
+        senhaInput.type = 'text';
+        iconSvg.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.815 7.815 3 3m-3-3-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />`;
+      } else {
+        senhaInput.type = 'password';
+        iconSvg.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />`;
+      }
+    });
+
+    // Submissão do formulário de login
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('login-email').value.trim();
+      const senha = document.getElementById('login-senha').value.trim();
+      const erroEl = document.getElementById('login-erro');
+      const btnEl = document.getElementById('btn-login');
+
+      if (!email || !senha) {
+        erroEl.textContent = 'Por favor, preencha todos os campos.';
+        erroEl.classList.remove('hidden');
+        return;
+      }
+
+      btnEl.textContent = 'Entrando...';
+      btnEl.disabled = true;
+      erroEl.textContent = '';
+      erroEl.classList.add('hidden');
+
+      const { error } = await db.auth.signInWithPassword({
+        email,
+        password: senha
+      });
+
+      if (error) {
+        erroEl.textContent = 'E-mail ou senha incorretos.';
+        erroEl.classList.remove('hidden');
+        btnEl.textContent = 'Entrar';
+        btnEl.disabled = false;
+        return;
+      }
+
+      window.location.href = 'dashboard.html';
+    });
+
+    // Se já estiver logado, redireciona
+    db.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+
+</html>

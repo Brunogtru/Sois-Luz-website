@@ -256,7 +256,7 @@
 }
 
 .loja__nome {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   line-height: var(--lh-snug);
@@ -471,7 +471,7 @@
 }
 
 .carrinho__titulo {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-lg);
   font-weight: var(--fw-light);
   font-style: italic;
@@ -539,7 +539,7 @@
 }
 
 .item__nome {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-sm);
   font-weight: var(--fw-light);
   font-style: italic;
@@ -791,7 +791,7 @@
 }
 
 .modal__titulo {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   font-style: italic;
@@ -947,7 +947,7 @@
 }
 
 .modal__sucesso h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   font-style: italic;

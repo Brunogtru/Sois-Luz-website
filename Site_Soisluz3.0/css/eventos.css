@@ -254,7 +254,7 @@
 }
 
 .proximo__nome {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   line-height: var(--lh-snug);
@@ -441,7 +441,7 @@
 }
 
 .passado__nome {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-md);
   font-weight: var(--fw-light);
   font-style: italic;
@@ -595,7 +595,7 @@
 }
 
 .modal__titulo {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   font-style: italic;
@@ -717,7 +717,7 @@
 }
 
 .modal__sucesso h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-titulo);
   font-size: var(--fs-xl);
   font-weight: var(--fw-light);
   font-style: italic;

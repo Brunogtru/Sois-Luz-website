@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <title>Gestão de Eventos — Sois Luz</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__topo">
+        <a href="dashboard.html" class="admin-logo">
+          Sois Luz
+        </a>
+        <div class="admin-user">
+          <div class="admin-avatar" id="admin-avatar">TL</div>
+          <div class="admin-user__info">
+            <span class="admin-user__nome" id="admin-nome">Carregando...</span>
+            <span class="admin-user__nivel" id="admin-nivel"></span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="pedidos.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Pedidos
+          <span class="admin-nav__badge" id="badge-pedidos"></span>
+        </a>
+        <a href="inscricoes.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Inscrições
+          <span class="admin-nav__badge" id="badge-inscricoes"></span>
+        </a>
+        <div class="admin-nav__separador"></div>
+        <a href="eventos.html" class="admin-nav__link ativo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Eventos
+        </a>
+        <a href="produtos.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Produtos
+        </a>
+        <a href="equipe.html" class="admin-nav__link" id="menu-equipe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Equipe
+        </a>
+      </nav>
+
+      <div class="admin-sidebar__rodape">
+        <button class="admin-logout" id="btn-logout" onclick="adminLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair da conta
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="admin-main">
+      
+      <!-- Header da Página -->
+      <div class="admin-page-header">
+        <div class="admin-page-header__esquerda">
+          <h1 class="admin-page-titulo">Gestão de Eventos</h1>
+          <span class="admin-page-sub" id="total-registros">0 encontros registrados</span>
+        </div>
+        <button class="btn-primario" id="btn-novo-evento">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>+ Novo Evento</span>
+        </button>
+      </div>
+
+      <!-- Área de Conteúdo Específico -->
+      <div class="admin-content">
+        
+        <!-- Grid de Eventos -->
+        <div class="admin-eventos-grid" id="eventos-grid">
+          <div class="admin-card__empty" style="grid-column: 1/-1;">
+            Carregando encontros do Supabase...
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Modal Criar / Editar Evento -->
+  <div class="admin-modal-overlay" id="evento-modal">
+    <div class="admin-modal">
+      
+      <header class="admin-modal__header">
+        <h3 class="admin-modal__titulo" id="modal-titulo">Novo Encontro</h3>
+        <button class="admin-modal__fechar" id="btn-fechar-modal" aria-label="Fechar formulário">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </header>
+
+      <form id="form-evento" class="admin-modal__body" novalidate style="padding: 0;">
+        <div style="padding: var(--space-7); display: flex; flex-direction: column; gap: var(--space-5);">
+          <input type="hidden" id="evento-id">
+
+          <div class="admin-form__grupo">
+            <label class="admin-form__label" for="evento-nome">Nome do Encontro <span>*</span></label>
+            <input class="admin-form__input" type="text" id="evento-nome" placeholder="Ex: Mesa das Filhas do Rei" required>
+          </div>
+
+          <div class="admin-form__grupo">
+            <label class="admin-form__label" for="evento-desc">Descrição / Chamada</label>
+            <textarea class="admin-form__textarea" id="evento-desc" placeholder="Descreva brevemente o propósito deste encontro..."></textarea>
+          </div>
+
+          <div class="admin-form__row">
+            <div class="admin-form__grupo">
+              <label class="admin-form__label" for="evento-data">Data <span>*</span></label>
+              <input class="admin-form__input" type="date" id="evento-data" required>
+            </div>
+            <div class="admin-form__grupo">
+              <label class="admin-form__label" for="evento-horario">Horário <span>*</span></label>
+              <input class="admin-form__input" type="text" id="evento-horario" placeholder="Ex: 09h — 12h" required>
+            </div>
+          </div>
+
+          <div class="admin-form__row">
+            <div class="admin-form__grupo">
+              <label class="admin-form__label" for="evento-local">Local / Cidade <span>*</span></label>
+              <input class="admin-form__input" type="text" id="evento-local" placeholder="Ex: Suzano, SP" required>
+            </div>
+            <div class="admin-form__grupo">
+              <label class="admin-form__label" for="evento-vagas">Vagas Disponíveis</label>
+              <input class="admin-form__input" type="number" id="evento-vagas" placeholder="Ex: 30">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); align-items: center;">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" id="evento-gratuito" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">Entrada Gratuita</span>
+            </div>
+
+            <div class="admin-form__grupo" id="grupo-preco" style="display: none;">
+              <label class="admin-form__label" for="evento-preco">Preço (R$)</label>
+              <input class="admin-form__input" type="number" step="0.01" id="evento-preco" placeholder="0,00">
+            </div>
+          </div>
+
+          <div class="admin-form__grupo">
+            <label class="admin-form__label" for="evento-imagem">URL da Imagem da Capa</label>
+            <input class="admin-form__input" type="text" id="evento-imagem" placeholder="https://exemplo.com/imagem.jpg">
+          </div>
+
+          <div class="admin-form__grupo">
+            <label class="admin-form__label" for="evento-status">Status de Agendamento</label>
+            <select class="admin-form__select" id="evento-status">
+              <option value="proximo">Próximo (Ativo no site)</option>
+              <option value="passado">Passado (Arquivado / Histórico)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-modal__footer">
+          <button class="btn-secundario" type="button" onclick="fecharModal()">Cancelar</button>
+          <button class="btn-primario" type="submit">Salvar Encontro</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="js/admin-auth.js"></script>
+  <script src="js/admin-eventos.js"></script>
+</body>
+</html>

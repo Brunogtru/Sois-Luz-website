@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <title>Dashboard Geral — Sois Luz</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__topo">
+        <a href="dashboard.html" class="admin-logo">
+          Sois Luz
+        </a>
+        <div class="admin-user">
+          <div class="admin-avatar" id="admin-avatar">TL</div>
+          <div class="admin-user__info">
+            <span class="admin-user__nome" id="admin-nome">Carregando...</span>
+            <span class="admin-user__nivel" id="admin-nivel"></span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav__link ativo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="pedidos.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Pedidos
+          <span class="admin-nav__badge" id="badge-pedidos"></span>
+        </a>
+        <a href="inscricoes.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Inscrições
+          <span class="admin-nav__badge" id="badge-inscricoes"></span>
+        </a>
+        <div class="admin-nav__separador"></div>
+        <a href="eventos.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Eventos
+        </a>
+        <a href="produtos.html" class="admin-nav__link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Produtos
+        </a>
+        <a href="equipe.html" class="admin-nav__link" id="menu-equipe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Equipe
+        </a>
+      </nav>
+
+      <div class="admin-sidebar__rodape">
+        <button class="admin-logout" id="btn-logout" onclick="adminLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair da conta
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="admin-main">
+      
+      <!-- Header da Página -->
+      <div class="admin-page-header">
+        <div class="admin-page-header__esquerda">
+          <h1 class="admin-page-titulo">Dashboard Geral</h1>
+          <span class="admin-page-sub">Acompanhe os dados principais do ministério Sois Luz</span>
+        </div>
+        <a href="eventos.html" class="btn-primario">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>+ Novo Evento</span>
+        </a>
+      </div>
+
+      <!-- Área de Conteúdo Específico -->
+      <div class="admin-content">
+        
+        <!-- Grid de Estatísticas (Métricas) -->
+        <section class="admin-stats-grid" aria-label="Métricas gerais">
+          
+          <div class="admin-stat">
+            <div class="admin-stat__header">
+              <span class="admin-stat__label">Total de Pedidos</span>
+              <div class="admin-stat__icone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
+            </div>
+            <span class="admin-stat__valor" id="stat-total-pedidos">0</span>
+          </div>
+
+          <div class="admin-stat">
+            <div class="admin-stat__header">
+              <span class="admin-stat__label">Pedidos Aprovados</span>
+              <div class="admin-stat__icone" style="background: rgba(22,101,52,0.08);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+            </div>
+            <span class="admin-stat__valor" id="stat-aprovados">0</span>
+          </div>
+
+          <div class="admin-stat">
+            <div class="admin-stat__header">
+              <span class="admin-stat__label">Total Inscrições</span>
+              <div class="admin-stat__icone" style="background: rgba(30,64,175,0.08);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1E40AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+            </div>
+            <span class="admin-stat__valor" id="stat-inscricoes">0</span>
+          </div>
+
+          <div class="admin-stat">
+            <div class="admin-stat__header">
+              <span class="admin-stat__label">Receita Acumulada</span>
+              <div class="admin-stat__icone">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+            </div>
+            <span class="admin-stat__valor" id="stat-receita">R$ 0,00</span>
+          </div>
+
+        </section>
+
+        <!-- Grid Principal (2 colunas) -->
+        <section class="admin-grid-2col" aria-label="Resumos do sistema">
+          
+          <!-- Coluna da Esquerda (Tabelas Recentes) -->
+          <div class="admin-panel">
+            
+            <!-- Card Pedidos Recentes -->
+            <div class="admin-card">
+              <header class="admin-card__header">
+                <h2 class="admin-card__titulo">Pedidos Recentes</h2>
+                <a href="pedidos.html" class="admin-card__link">Ver todos &rarr;</a>
+              </header>
+              <div class="admin-card__body" style="padding: 0;">
+                <div class="admin-table-wrap">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Cliente</th>
+                        <th>Produtos</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                      </tr>
+                    </thead>
+                    <tbody id="pedidos-tbody">
+                      <tr>
+                        <td colspan="5" class="admin-table__empty">Carregando dados...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Inscrições Recentes -->
+            <div class="admin-card">
+              <header class="admin-card__header">
+                <h2 class="admin-card__titulo">Inscrições Recentes</h2>
+                <a href="inscricoes.html" class="admin-card__link">Ver todas &rarr;</a>
+              </header>
+              <div class="admin-card__body" style="padding: 0;">
+                <div class="admin-table-wrap">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Participante</th>
+                        <th>WhatsApp</th>
+                        <th>Encontro</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                      </tr>
+                    </thead>
+                    <tbody id="inscricoes-tbody">
+                      <tr>
+                        <td colspan="5" class="admin-table__empty">Carregando dados...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Coluna da Direita (Financeiro e Encontros) -->
+          <div class="admin-panel">
+            
+            <!-- Card Faturamento -->
+            <div class="admin-card">
+              <header class="admin-card__header">
+                <h2 class="admin-card__titulo">Faturamento (6 Meses)</h2>
+              </header>
+              <div class="admin-card__body" style="padding: var(--space-5) 0 0;">
+                <div class="admin-grafico-mini-grid" style="padding: 0 var(--space-6);">
+                  <div class="admin-grafico-mini">
+                    <div class="admin-grafico-mini__label">Receita Total</div>
+                    <div class="admin-grafico-mini__valor" id="stat-receita-total">R$ 0,00</div>
+                  </div>
+                  <div class="admin-grafico-mini">
+                    <div class="admin-grafico-mini__label">Pendente</div>
+                    <div class="admin-grafico-mini__valor" id="stat-pendente" style="color: #92680A;">R$ 0,00</div>
+                  </div>
+                </div>
+                
+                <div class="admin-grafico-wrap" style="height: 180px; position: relative;">
+                  <canvas id="grafico-receita"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Próximos Encontros -->
+            <div class="admin-card">
+              <header class="admin-card__header">
+                <h2 class="admin-card__titulo">Próximos Encontros</h2>
+                <a href="eventos.html" class="admin-card__link">Ver todos &rarr;</a>
+              </header>
+              <div class="admin-proximos-lista" id="eventos-lista">
+                <div class="admin-card__empty">Buscando próximos encontros...</div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/supabase-client.js"></script>
+  <script src="js/admin-auth.js"></script>
+  <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

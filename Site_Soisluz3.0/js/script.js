@@ -122,19 +122,36 @@ function initHeroParallax() {
 
 /* ---------- MANIFESTO ---------- */
 function initManifesto() {
-  gsap.to('.line--top', {
-    opacity: 1, scaleY: 1, duration: 1, ease: 'power3.out',
-    scrollTrigger: { trigger: '#manifesto', start: 'top 80%' }
+  gsap.to('.manifesto__line', {
+    opacity: 1,
+    duration: 1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '#manifesto',
+      start: 'top 80%'
+    }
   });
 
   gsap.to('.manifesto__block', {
-    opacity: 1, y: 0, duration: 0.9, stagger: 0.25, ease: 'power3.out',
-    scrollTrigger: { trigger: '.manifesto__blocks', start: 'top 75%' }
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    stagger: 0.3,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.manifesto__blocks',
+      start: 'top 75%'
+    }
   });
 
-  gsap.to(['.line--bottom', '.manifesto__signature'], {
-    opacity: 1, duration: 1, stagger: 0.2, ease: 'power2.out',
-    scrollTrigger: { trigger: '.manifesto__signature', start: 'top 85%' }
+  gsap.to('.manifesto__signature', {
+    opacity: 1,
+    duration: 0.8,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.manifesto__signature',
+      start: 'top 90%'
+    }
   });
 }
 
@@ -162,8 +179,8 @@ function initEvento() {
 }
 
 /* ---------- COUNTDOWN ---------- */
-function initCountdown() {
-  var dataEvento = new Date('2026-08-01T09:00:00');
+function iniciarCountdown(dataEvento) {
+  if (!dataEvento) return;
 
   function atualizar() {
     var agora = new Date();
@@ -193,6 +210,79 @@ function initCountdown() {
 
   atualizar();
   setInterval(atualizar, 1000);
+}
+
+/* ---------- SUPABASE: CARREGAR PRÓXIMO EVENTO ---------- */
+async function carregarProximoEvento() {
+  try {
+    const { data, error } = await db
+      .from('eventos')
+      .select('*')
+      .eq('status', 'proximo')
+      .order('data_evento', { ascending: true })
+      .limit(1)
+      .single()
+
+    if (error || !data) {
+      // Esconde a seção inteira se não há evento
+      const secao = document.getElementById('proximo-evento')
+      if (secao) secao.style.display = 'none'
+      return
+    }
+
+    // Formata data em português
+    const dataFormatada = new Date(data.data_evento + 'T00:00:00')
+      .toLocaleDateString('pt-BR', {
+        day:   '2-digit',
+        month: 'long',
+        year:  'numeric'
+      })
+
+    // Preenche os dados no HTML
+    const els = {
+      nome:     document.getElementById('evento-nome'),
+      data:     document.getElementById('evento-data'),
+      horario:  document.getElementById('evento-horario'),
+      local:    document.getElementById('evento-local'),
+      desc:     document.getElementById('evento-desc'),
+      preco:    document.getElementById('evento-preco'),
+      imagem:   document.getElementById('evento-imagem'),
+      badge:    document.getElementById('evento-badge')
+    }
+
+    if (els.nome)    els.nome.textContent    = data.nome
+    if (els.data)    els.data.textContent    = dataFormatada
+    if (els.horario) els.horario.textContent = data.horario
+    if (els.local)   els.local.textContent   = data.local
+    if (els.desc)    els.desc.textContent    = data.descricao || ''
+
+    if (els.preco) {
+      els.preco.textContent = data.gratuito
+        ? '✦ Entrada gratuita'
+        : `R$ ${Number(data.preco).toFixed(2).replace('.', ',')}`
+    }
+
+    if (els.badge) {
+      els.badge.textContent = data.gratuito ? 'Gratuito' : 'Evento pago'
+      els.badge.className   = data.gratuito
+        ? 'proximo__badge proximo__badge--gratuito'
+        : 'proximo__badge proximo__badge--pago'
+    }
+
+    if (els.imagem && data.imagem_url) {
+      els.imagem.src = data.imagem_url
+      els.imagem.alt = data.nome
+    }
+
+    // Atualiza o countdown com a data real do evento
+    const dataEvento = new Date(
+      data.data_evento + 'T' + (data.horario?.slice(0,5) || '09:00') + ':00'
+    )
+    iniciarCountdown(dataEvento)
+
+  } catch (err) {
+    console.error('Erro ao carregar próximo evento:', err)
+  }
 }
 
 /* ---------- PRODUTOS ---------- */
@@ -235,154 +325,6 @@ function initProdutos() {
   gsap.to('.produtos__btn', {
     opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
     scrollTrigger: { trigger: '.produtos__btn', start: 'top 90%' }
-  });
-}
-
-/* ---------- DEPOIMENTOS ---------- */
-function initDepoimentos() {
-
-  var track      = document.getElementById('depoimentos-track');
-  var dotsWrap   = document.getElementById('dep-dots');
-  var btnPrev    = document.getElementById('dep-prev');
-  var btnNext    = document.getElementById('dep-next');
-  var progressBar = document.getElementById('dep-progress');
-
-  if (!track) return;
-
-  var cards  = track.querySelectorAll('.depoimento__card');
-  var total  = cards.length;
-  var current  = 0;
-  var autoplayTimer  = null;
-  var progressTimer  = null;
-  var AUTOPLAY_MS  = 5000;
-
-  /* Gera os dots dinamicamente */
-  dotsWrap.innerHTML = '';
-  cards.forEach(function(_, i) {
-    var dot = document.createElement('button');
-    dot.className = 'depoimentos__dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', 'Depoimento ' + (i + 1));
-    dot.addEventListener('click', function() {
-      goTo(i, true);
-    });
-    dotsWrap.appendChild(dot);
-  });
-
-  /* Navega para o indice alvo */
-  function goTo(index, resetAutoplay) {
-    current = ((index % total) + total) % total;
-
-    track.style.transform = 'translateX(-' + (current * 100) + '%)';
-
-    dotsWrap.querySelectorAll('.depoimentos__dot')
-      .forEach(function(dot, i) {
-        dot.classList.toggle('active', i === current);
-      });
-
-    gsap.fromTo(cards[current],
-      { opacity: 0.6, scale: 0.98 },
-      { opacity: 1, scale: 1,
-        duration: 0.5, ease: 'power2.out' }
-    );
-
-    if (resetAutoplay) {
-      reiniciarAutoplay();
-    }
-  }
-
-  /* Barra de progresso */
-  function iniciarProgress() {
-    progressBar.style.transition = 'none';
-    progressBar.style.width = '0%';
-
-    /* Forca reflow para reiniciar a animacao CSS */
-    progressBar.offsetHeight;
-
-    progressBar.style.transition = 'width ' + AUTOPLAY_MS + 'ms linear';
-    progressBar.style.width = '100%';
-  }
-
-  /* Autoplay */
-  function iniciarAutoplay() {
-    autoplayTimer = setInterval(function() {
-      goTo(current + 1);
-      iniciarProgress();
-    }, AUTOPLAY_MS);
-    iniciarProgress();
-  }
-
-  function pararAutoplay() {
-    clearInterval(autoplayTimer);
-    clearTimeout(progressTimer);
-    progressBar.style.transition = 'none';
-    progressBar.style.width = '0%';
-  }
-
-  function reiniciarAutoplay() {
-    pararAutoplay();
-    iniciarAutoplay();
-  }
-
-  /* Setas */
-  btnPrev.addEventListener('click', function() {
-    goTo(current - 1, true);
-  });
-
-  btnNext.addEventListener('click', function() {
-    goTo(current + 1, true);
-  });
-
-  /* Pausa ao hover */
-  var wrap = document.querySelector('.depoimentos__carrossel-wrap');
-  wrap.addEventListener('mouseenter', pararAutoplay);
-  wrap.addEventListener('mouseleave', function() {
-    iniciarAutoplay();
-  });
-
-  /* Swipe mobile */
-  var startX = 0;
-  track.addEventListener('touchstart', function(e) {
-    startX = e.touches[0].clientX;
-    pararAutoplay();
-  }, { passive: true });
-
-  track.addEventListener('touchend', function(e) {
-    var diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? goTo(current + 1, true) : goTo(current - 1, true);
-    } else {
-      iniciarAutoplay();
-    }
-  }, { passive: true });
-
-  /* Teclado acessivel */
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft')  goTo(current - 1, true);
-    if (e.key === 'ArrowRight') goTo(current + 1, true);
-  });
-
-  /* Animacao GSAP de entrada */
-  gsap.to('.depoimentos__header', {
-    opacity: 1,
-    y: 0,
-    duration: 0.9,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '#depoimentos',
-      start: 'top 75%'
-    }
-  });
-
-  gsap.from('.depoimentos__track-outer', {
-    opacity: 0,
-    y: 40,
-    duration: 1,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.depoimentos__carrossel-wrap',
-      start: 'top 80%',
-      onEnter: function() { iniciarAutoplay(); }
-    }
   });
 }
 
@@ -555,7 +497,7 @@ function initCustomCursor() {
 
   updateCursor();
 
-  var targets = 'a, button, input, textarea, select, [role="button"], .produto__card, .evento__card, .depoimentos__btn-nav, .depoimentos__dot';
+  var targets = 'a, button, input, textarea, select, [role="button"], .produto__card, .evento__card';
 
   document.addEventListener('mouseover', function (e) {
     if (e.target.closest(targets)) {
@@ -584,9 +526,8 @@ document.addEventListener('DOMContentLoaded', function () {
   initHeroParallax();
   initManifesto();
   initEvento();
-  initCountdown();
+  carregarProximoEvento();
   initProdutos();
-  initDepoimentos();
   initSobre();
   initFooter();
 });
